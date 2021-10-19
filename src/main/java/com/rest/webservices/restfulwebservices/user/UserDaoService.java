@@ -18,10 +18,12 @@ public class UserDaoService {
 		usersCount += 3;
 	}
 
+	// Get All Users
 	public List<User> findAll(){
 		return users;
 	}
 	
+	// Get user by ID
 	public User getUserByID(int id){
 		for(User user : users) {
 			if(user.getId() == id)
@@ -30,6 +32,7 @@ public class UserDaoService {
 		return null;
 	}
 	
+	// Save User
 	public User save(User user) {
 		if(user.getId() == null) {
 			user.setId(++usersCount);
@@ -38,6 +41,7 @@ public class UserDaoService {
 		return user;
 	}
 	
+	// Delete User by ID
 	public User deleteUserByID(int id){
 		for(User user : users) {
 			if(user.getId() == id) {
@@ -47,5 +51,7 @@ public class UserDaoService {
 		}
 		return null;
 	}
+	
+	
 	
 }
