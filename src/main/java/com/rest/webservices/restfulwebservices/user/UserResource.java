@@ -6,6 +6,8 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javassist.NotFoundException;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
 public class UserResource {
@@ -29,12 +31,15 @@ public class UserResource {
 	}
 	
 	@GetMapping("/users/{id}")
-	public User retrieveUser(@PathVariable int id) throws NotFoundException{
+	public EntityModel<User> retrieveUser(@PathVariable int id){
 		User user = userDaoService.getUserByID(id);
 		if(user == null) {
 			throw new UserNotFoundException(String.format("User ID - %d Not Found", id));
 		}
-		return user;
+		EntityModel<User> model = EntityModel.of(user);
+		WebMvcLinkBuilder linkToUsers = linkTo(methodOn(this.getClass()).retrieveAllUsers());
+		model.add(linkToUsers.withRel("all-users"));
+		return model;
 	}
 	
 	@PostMapping("/users")
@@ -49,7 +54,7 @@ public class UserResource {
 	}
 	
 	@DeleteMapping("/users/{id}")
-	public void deleteUser(@PathVariable int id) throws NotFoundException{
+	public void deleteUser(@PathVariable int id){
 		User user = userDaoService.deleteUserByID(id);
 		if(user == null) {
 			throw new UserNotFoundException(String.format("User ID - %d Not Found", id));
