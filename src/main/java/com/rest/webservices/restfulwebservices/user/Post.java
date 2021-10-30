@@ -1,41 +1,55 @@
 package com.rest.webservices.restfulwebservices.user;
 
-import java.util.Date;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+@Entity
 public class Post {
-	private Integer userID;
-	private Integer postID;
-	private String postBody;
-	private Date timeStamp;
-	public Post(Integer userID, Integer postID, String postBody, Date timeStamp) {
+	@javax.persistence.Id
+	@GeneratedValue
+	private Integer Id;
+	private String description;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
+	private User user;
+	
+	public Post() {
 		super();
-		this.userID = userID;
-		this.postID = postID;
-		this.postBody = postBody;
-		this.timeStamp = timeStamp;
 	}
-	public Integer getUserID() {
-		return userID;
+
+	public Post(Integer id, String description, User user) {
+		super();
+		Id = id;
+		this.description = description;
+		this.user = user;
 	}
-	public void setUserID(Integer userID) {
-		this.userID = userID;
+	
+	public Integer getId() {
+		return Id;
 	}
-	public Integer getPostID() {
-		return postID;
+	public void setId(Integer id) {
+		Id = id;
 	}
-	public void setPostID(Integer postID) {
-		this.postID = postID;
+	public String getDescription() {
+		return description;
 	}
-	public String getPostBody() {
-		return postBody;
+	public void setDescription(String description) {
+		this.description = description;
 	}
-	public void setPostBody(String postBody) {
-		this.postBody = postBody;
+	public User getUser() {
+		return user;
 	}
-	public Date getTimeStamp() {
-		return timeStamp;
+	public void setUser(User user) {
+		this.user = user;
 	}
-	public void setTimeStamp(Date timeStamp) {
-		this.timeStamp = timeStamp;
+
+	@Override
+	public String toString() {
+		return "Post [Id=" + Id + ", description=" + description + "]";
 	}
 }
