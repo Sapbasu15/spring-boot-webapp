@@ -73,6 +73,20 @@ public class UserJPAResource {
 		return posts;
 	}
 	
+	@GetMapping("/users/{id}/posts/{postId}")
+	public EntityModel<Post> retrievePostsById(@PathVariable int id, @PathVariable int postId){
+		Optional<User> user = userRepository.findById(id);
+		if(!user.isPresent()) {
+			throw new UserNotFoundException(String.format("User ID - %d Not Found", id));
+		}
+		Optional<Post> post = postRepository.findById(postId);
+		if(!post.isPresent()) {
+			throw new UserNotFoundException(String.format("Post ID - %d Not Found", postId));
+		}
+		EntityModel<Post> model = EntityModel.of(post.get());
+		return model;
+	}
+	
 	@PostMapping("/users/{id}/posts")
 	public ResponseEntity<Post> createPost(@PathVariable int id, @RequestBody Post post){
 		Optional<User> user = userRepository.findById(id);
